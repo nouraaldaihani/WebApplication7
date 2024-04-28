@@ -25,19 +25,19 @@ namespace WebApplication7.Controllers
 
             }).ToList();
         }
-        [HttpPost]
+        [HttpPost("{id}")]
 
         public IActionResult Add(int id, AddEmployeeRequest employee)
         {
 
 
             var Employee = _context.Employees.Find(id);
-            _context.Employees.Add(new Employee()
+             _context.Employees.Add(new Employee()
             {
                 Name = Employee.Name,
                 CivilId = Employee.CivilId,
                 Position = Employee.Position,
-                
+
             });
             _context.SaveChanges();
             return Created();
