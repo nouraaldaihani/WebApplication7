@@ -13,15 +13,34 @@ namespace WebApplication7.Controllers
         {
             _context = context;
         }
+        [HttpGet]
         public List<Employee> GetAll()
         {
             return _context.Employees.Select(b => new Employee
             {
                 Name = b.Name,
                 CivilId = b.CivilId,
-                Position = b.Position
+                Position = b.Position,
+                Id = b.Id
 
             }).ToList();
+        }
+        [HttpPost]
+
+        public IActionResult Add(int id, AddEmployeeRequest employee)
+        {
+
+
+            var Employee = _context.Employees.Find(id);
+            _context.Employees.Add(new Employee()
+            {
+                Name = Employee.Name,
+                CivilId = Employee.CivilId,
+                Position = Employee.Position,
+                
+            });
+            _context.SaveChanges();
+            return Created();
         }
         [HttpGet("{id}")]
         public ActionResult Details(int id)
@@ -46,25 +65,24 @@ namespace WebApplication7.Controllers
             Employee.Name = req.Name;
             Employee.CivilId = req.CivilId;
             Employee.Position = req.Position;
-            var bankbranch = _context.BankBranches.Find(Employee.Id);
-            _context.Employees.Add(Employee);
+        
             _context.SaveChanges();
             return Created(nameof(Details), new { Id = Employee.Id });
         }
-        [HttpPost("AddEmployee/{id}")]
-        public IActionResult Add(int id, AddEmployeeRequest req)
-        {
-            var Employee = new Employee();
-            Employee.Name = req.Name;
-            Employee.CivilId = req.CivilId;
-            Employee.Position = req.Position;
+        //[HttpPost("AddEmployee/{id}")]
+        //public IActionResult Add(int id, AddEmployeeRequest req)
+        //{
+        //    var Employee = new Employee();
+        //    Employee.Name = req.Name;
+        //    Employee.CivilId = req.CivilId;
+        //    Employee.Position = req.Position;
 
-            var bankbranch = _context.BankBranches.Find(id);
-            Employee.BankBranch = bankbranch;
-            _context.Employees.Add(Employee);   
-            _context.SaveChanges();
-            return Created(nameof(Details), new { Id = Employee.Id });
-        }
+        //    var bankbranch = _context.BankBranches.Find(id);
+        //    Employee.BankBranch = bankbranch;
+        //    _context.Employees.Add(Employee);   
+        //    _context.SaveChanges();
+        //    return Created(nameof(Details), new { Id = Employee.Id });
+        //}
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
